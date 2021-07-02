@@ -1,4 +1,4 @@
-# credible-be
+# cuba-bff
 
  APIs built on the Cuba Platform. 
 
@@ -83,15 +83,12 @@ CircleCI config.yml in _.circleci_ folder runs CI/CD pipe-line of following jobs
 for **_dev,staging_** environments
 
 
-## Credible config
+## Custom config
  config parameters are to be stored in cuba sys config database table. For now, ck editor parameters
  are to be stored through the backend. Backend is to expose an api to update/insert config data, and seeder project
   is to be updated.
 
-```
-credible.ckeditor.environmentId	= environmentidvalue
-credible.ckeditor.secret = secretvalue
-```
+
 ## Health check url
 health check endpoints for **_Web,Core_** blocks are available at
 [/app-core/rest/health] (http://localhost:8080/app-core/remoting/health)
