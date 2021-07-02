@@ -1,0 +1,135 @@
+version: 2.1
+
+references:
+
+  main_only: &main_only
+    filters:
+      branches:
+        only: main
+
+  staging_only: &staging_only
+    filters:
+      branches:
+        only: staging
+
+  dev_only: &dev_only
+    filters:
+      branches:
+        only: develop
+
+orbs:
+  aws-ecr: circleci/aws-ecr@6.14.0
+  aws-ecs: circleci/aws-ecs@1.4.0
+  coverage-reporter: codacy/coverage-reporter@11.15.0
+jobs:
+  lint-code-coverage:
+    working_directory: ~/credible-be
+    #docker:
+    #  - image: circleci/openjdk:latest
+    machine: true
+    steps:
+      - checkout
+      - run:
+          name: Detekt lint
+          command: ./gradlew detekt
+      - run:
+          name: core test
+          command: ./gradlew app-core:assembleDbScripts app-core:test
+      - store_test_results:
+          path: modules/core/build/test-results/test
+      - run:
+          name: web test
+          command: ./gradlew app-web:test
+      - store_test_results:
+          path: modules/web/build/test-results/test
+      - when:
+          condition:
+            equal: [ develop, << pipeline.git.branch >> ]
+          steps:
+            - store_artifacts:
+                path: modules/core/build/reports/
+            - store_artifacts:
+                path: modules/web/build/reports/
+            - coverage-reporter/send_report:
+                coverage-reports: 'modules/core/build/reports/jacoco/test/jacocoTestReport.xml,modules/web/build/reports/jacoco/test/jacocoTestReport.xml'
+                project-token: $CODACY_PROJECT_TOKEN
+  build-artifact:
+    working_directory: ~/credible-be
+    docker:
+      # specify the version you desire here
+      - image: circleci/openjdk:latest
+
+      # Specify service dependencies here if necessary
+      # CircleCI maintains a library of pre-built images
+      # documented at https://circleci.com/docs/2.0/circleci-images/
+    parameters: # parameters are at the job level
+      env:
+        type: string
+        default: dev
+    environment:
+      # Customize the JVM maximum heap limit
+      JVM_OPTS: -Xmx3200m
+    steps:
+      - checkout
+      # Download and cache dependencies
+      - restore_cache:
+          key: v1-gradle-wrapper-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
+      - restore_cache:
+         key: v1-gradle-cache-{{ checksum "build.gradle" }}
+      - run:
+          name: build
+          command: |
+            ./gradlew buildWar
+#      - persist_to_workspace:
+#          root: .
+#          path: build/distributions/war/app.war
+      - save_cache:
+          paths:
+            - ~/.gradle/wrapper
+          key: v1-gradle-wrapper-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
+      - save_cache:
+          paths:
+            - ~/.gradle/caches
+          key: v1-gradle-cache-{{ checksum "build.gradle" }}
+      - store_artifacts:
+          path: build/distributions/war
+      - aws-ecr/build-and-push-image:
+          create-repo: true
+          dockerfile: Dockerfile
+          extra-build-args: '--build-arg env=<< parameters.env >>'
+          no-output-timeout: 12m
+          repo: << parameters.env >>-credible-be
+          skip-when-tags-exist: false
+          setup-remote-docker: true
+          attach-workspace: true
+          tag: 'latest,${CIRCLE_SHA1}'
+
+workflows:
+    devDeploy:
+      jobs:
+        - lint-code-coverage
+        - build-artifact:
+            <<: *dev_only
+            requires:
+              - lint-code-coverage
+            env: dev
+        - aws-ecs/deploy-service-update:
+            requires:
+              - build-artifact
+            family: 'dev-credible-be-fargate-task'
+            cluster-name: 'dev-credible-cluster'
+            service-name: 'dev-credible-be-service'
+            container-image-name-updates: 'container=credible-be-container,tag=latest'
+
+    stagingDeploy:
+      jobs:
+        - build-artifact:
+            <<: *staging_only
+            env: stag
+        - aws-ecs/deploy-service-update:
+            requires:
+              - build-artifact
+            family: 'stag-credible-be-fargate-task'
+            cluster-name: 'stag-credible-cluster'
+            service-name: 'stag-credible-be-service'
+            container-image-name-updates: 'container=credible-be-container,tag=latest'

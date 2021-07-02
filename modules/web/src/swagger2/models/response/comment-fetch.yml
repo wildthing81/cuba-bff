@@ -1,0 +1,19 @@
+# Response object on fetching submission comments
+type: object
+properties:
+  id:
+    type: string
+    format: uuid
+    description: comment id
+  text:
+    type: string
+    description: comment text
+  createdBy:
+    $ref: '#/definitions/IdNameDto'
+  createdAt:
+    type: string
+    description: zulu time format
+  updatedAt:
+    type: string
+    description: zulu time format
+title: GetComment

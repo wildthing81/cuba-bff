@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+  ~ The code is copyright ©2021
+  -->
+
+<metadata xmlns="http://schemas.haulmont.com/cuba/metadata.xsd">
+
+    <metadata-model root-package="com.anzi.credible" namespace="credible"/>
+
+</metadata>

@@ -1,0 +1,2 @@
+alter table TASK_VIEWED_USERS add constraint FK_TASVIEUSE_ON_TASK foreign key (task_id) references task(ID);
+alter table TASK_VIEWED_USERS add constraint FK_TASVIEUSE_ON_USER foreign key (user_id) references SEC_USER(ID);

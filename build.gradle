@@ -1,0 +1,279 @@
+/*
+ * The code is copyright ©2021
+ */
+
+buildscript {
+    ext.cubaVersion = '7.2.12'
+    ext.kotlinVersion = '1.4.30'
+    ext.junitVersion = '5.6.2'
+    ext.mockkVersion = '1.11.0'
+    ext.striktVersion = '0.28.0'
+    ext.springVersion = '5.2.9.RELEASE'
+    ext.jacksonVersion = '2.11.0'
+    ext.swaggerVersion = '2.9.2'
+    ext.tcVersion = '1.15.2'
+    ext.detektVersion = '1.16.0'
+    repositories {
+        maven {
+            url 'https://repo.cuba-platform.com/content/groups/work'
+            credentials {
+                username(rootProject.hasProperty('repoUser') ? rootProject['repoUser'] : 'cuba')
+                password(rootProject.hasProperty('repoPass') ? rootProject['repoPass'] : 'cuba123')
+            }
+        }
+    }
+    dependencies {
+        classpath "com.haulmont.gradle:cuba-plugin:$cubaVersion"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
+        classpath "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion"
+        classpath "io.gitlab.arturbosch.detekt:detekt-gradle-plugin:$detektVersion"
+    }
+}
+
+def modulePrefix = 'app'
+
+def globalModule = project(":${modulePrefix}-global")
+def coreModule = project(":${modulePrefix}-core")
+def webModule = project(":${modulePrefix}-web")
+
+def servletApi = 'javax.servlet:javax.servlet-api:3.1.0'
+def websocketApi = 'javax.websocket:javax.websocket-api:1.1'
+
+apply(plugin: 'cuba')
+apply(plugin: 'org.jetbrains.kotlin.jvm')
+apply from: "./ktlint.gradle"
+apply(plugin: 'io.gitlab.arturbosch.detekt')
+
+
+cuba {
+    artifact {
+        group = 'com.anzi.credible'
+        version = '0.1'
+        isSnapshot = true
+    }
+    tomcat {
+        debugPort = '8000'
+    }
+}
+
+dependencies {
+    appComponent("com.haulmont.cuba:cuba-global:$cubaVersion")
+    appComponent('com.haulmont.addon.restapi:restapi-global:7.2.3')
+}
+
+def postgres = 'org.postgresql:postgresql:42.2.9'
+
+configure([globalModule, coreModule, webModule]) {
+    apply(plugin: 'java')
+    apply(plugin: 'maven')
+    apply(plugin: 'cuba')
+    apply(plugin: 'org.jetbrains.kotlin.jvm')
+    apply(plugin: 'jacoco')
+
+    compileKotlin {
+        kotlinOptions {
+            jvmTarget = "1.8"
+        }
+    }
+
+    compileTestKotlin {
+        kotlinOptions {
+            jvmTarget = "1.8"
+        }
+    }
+
+    dependencies {
+        testCompile("org.junit.jupiter:junit-jupiter-api:$junitVersion")
+        testCompile("org.junit.jupiter:junit-jupiter-engine:$junitVersion")
+        testCompile("org.junit.vintage:junit-vintage-engine:$junitVersion")
+        testCompile "org.testcontainers:testcontainers:$tcVersion"
+        testCompile "org.testcontainers:junit-jupiter:$tcVersion"
+        testCompile "org.testcontainers:postgresql:$tcVersion"
+        implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion"
+        implementation "com.github.slugify:slugify:2.4"
+        implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion"
+        implementation "io.github.microutils:kotlin-logging:1.8.3"
+        implementation "io.springfox:springfox-swagger2:$swaggerVersion"
+        implementation "io.springfox:springfox-swagger-ui:$swaggerVersion"
+        implementation "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
+        implementation "com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonVersion"
+        implementation 'com.auth0:java-jwt:3.15.0'
+        testImplementation "io.mockk:mockk:$mockkVersion"
+        testImplementation "io.strikt:strikt-core:$striktVersion"
+        testImplementation "org.springframework:spring-test:$springVersion"
+        testImplementation "org.skyscreamer:jsonassert:1.5.0"
+        testImplementation "com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonVersion"
+    }
+
+    task sourceJar(type: Jar) {
+        from file('src')
+        classifier = 'sources'
+    }
+
+    artifacts {
+        archives sourceJar
+    }
+    test {
+        useJUnitPlatform()
+        finalizedBy jacocoTestReport
+    }
+
+    jacocoTestReport {
+        dependsOn test
+        reports {
+            xml.enabled = true
+        }
+    }
+}
+
+
+configure(globalModule) {
+    dependencies {
+        if (!JavaVersion.current().isJava8()) {
+            runtime('javax.xml.bind:jaxb-api:2.3.1')
+            runtime('org.glassfish.jaxb:jaxb-runtime:2.3.1')
+        }
+        compileOnly(postgres)
+        compileOnly(websocketApi)
+    }
+
+    entitiesEnhancing {
+        main {
+            enabled = true
+        }
+    }
+}
+
+configure(coreModule) {
+
+    configurations {
+        jdbc
+        dbscripts
+    }
+
+    dependencies {
+        compile(globalModule)
+        compileOnly(servletApi)
+        compileOnly(websocketApi)
+        jdbc(postgres)
+        testCompile(websocketApi)
+        testRuntime(postgres)
+        testRuntime('org.apache.tomcat.embed:tomcat-embed-websocket:9.0.41')
+    }
+
+    task cleanConf(description: 'Cleans up conf directory', type: Delete) {
+        delete "$cuba.appHome/${modulePrefix}-core/conf"
+    }
+
+    task deploy(dependsOn: [assemble, cleanConf], type: CubaDeployment) {
+        appName = "${modulePrefix}-core"
+        appJars(modulePrefix + '-global', modulePrefix + '-core')
+    }
+
+    task createDb(dependsOn: assembleDbScripts, description: 'Creates local database', type: CubaDbCreation) {
+    }
+
+    task updateDb(dependsOn: assembleDbScripts, description: 'Updates local database', type: CubaDbUpdate) {
+    }
+}
+
+configure(webModule) {
+    configurations {
+        webcontent
+    }
+
+    dependencies {
+        compileOnly(servletApi)
+        compile(globalModule)
+    }
+
+    task webArchive(type: Zip) {
+        from file("$buildDir/web")
+        from file('web')
+        classifier = 'web'
+    }
+
+    artifacts {
+        archives webArchive
+    }
+
+    task deployConf(type: Copy) {
+        from file('src')
+        include "com/anzi/credible/**"
+        into "$cuba.appHome/${modulePrefix}/conf"
+    }
+
+    task clearMessagesCache(type: CubaClearMessagesCache) {
+        appName = "${modulePrefix}"
+    }
+    deployConf.dependsOn clearMessagesCache
+
+    task cleanConf(description: 'Cleans up conf directory', type: Delete) {
+        delete "$cuba.appHome/${modulePrefix}/conf"
+    }
+
+    task deploy(dependsOn: [assemble, cleanConf], type: CubaDeployment) {
+        appName = "${modulePrefix}"
+        appJars(modulePrefix + '-global', modulePrefix + '-web')
+    }
+}
+
+
+task undeploy(type: Delete, dependsOn: ":${modulePrefix}-web:cleanConf") {
+    delete("$cuba.tomcat.dir/shared")
+    delete("$cuba.tomcat.dir/webapps/${modulePrefix}-core")
+    delete("$cuba.tomcat.dir/webapps/${modulePrefix}")
+}
+
+task restart(dependsOn: ['stop', ":${modulePrefix}-core:deploy", ":${modulePrefix}-web:deploy"], description: 'Redeploys applications and restarts local Tomcat') {
+    doLast {
+        ant.waitfor(maxwait: 6, maxwaitunit: 'second', checkevery: 2, checkeveryunit: 'second') {
+            not {
+                socket(server: 'localhost', port: '8787')
+            }
+        }
+    }
+}
+restart.finalizedBy start
+
+task buildUberJar(type: CubaUberJarBuilding) {
+    singleJar = true
+    appProperties = ['cuba.automaticDatabaseUpdate': true]
+    //webPort = 3000
+}
+
+task buildWar(type: CubaWarBuilding) {
+    appHome = '${app.home}'
+    singleWar = false
+    //webXmlPath = 'modules/web/web/WEB-INF/single-war-web.xml'
+    includeContextXml = true
+    includeJdbcDriver = true
+    useDefaultLogbackConfiguration = false
+    logbackConfigurationFile = "/modules/global/src/custom_logback.xml"
+    appProperties = [
+            'cuba.automaticDatabaseUpdate': true,
+            'cuba.webPort': 8080
+            //'cuba.connectionUrlList': 'http://localhost:8080/app-core'
+    ]
+}
+
+dependencies {
+    detektPlugins "io.gitlab.arturbosch.detekt:detekt-formatting:$detektVersion"
+    detektPlugins "io.gitlab.arturbosch.detekt:detekt-cli:$detektVersion"
+}
+
+detekt {
+    toolVersion = '1.16.0'
+    config = files("detekt.yml")
+    buildUponDefaultConfig = true
+    input = files("$rootDir/modules")
+    autoCorrect = true
+    ignoreFailures = true
+    reports {
+        html.enabled = true // observe findings in your browser with structure and code snippets
+        xml.enabled = true // checkstyle like format mainly for integrations like Jenkins
+        txt.enabled = true // similar to the console output, contains issue signature to manually edit baseline files
+    }
+}
+
+test.dependsOn 'detekt'

@@ -1,0 +1,11 @@
+# Request object to create comment
+type: object
+required:
+  - text
+properties:
+  submissionId:
+    type: string
+    description: submission UUID
+  text:
+    type: string
+    description: comment text

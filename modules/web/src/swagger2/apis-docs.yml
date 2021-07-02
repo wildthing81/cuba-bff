@@ -1,0 +1,1223 @@
+swagger: '2.0'
+info:
+  description: CUBA based REST APIs
+  version: '1.0'
+  title: Credible APIs
+  termsOfService: Terms of service
+  license:
+    name: Apache License Version 2.0
+host: <host>
+basePath: /app/rest
+tags:
+  - name: Borrower APIs
+    description: Operations on borrower
+  - name: Institution APIs
+    description: Operations on institution
+  - name: Submission APIs
+    description: Operations on submission
+  - name: Task APIs
+    description: Operations on task
+  - name: Comment APIs
+    description: Operations on comment
+  - name: User APIs
+    description: Operations on user related entities
+  - name: Workflow APIs
+    description: Operations on workflow
+  - name: CKEditor APIs
+    description: Operations on CKEditor
+  - name: Notification APIs
+    description: Operations on Notification
+paths:
+  /borrower:
+    post:
+      tags:
+        - Borrower APIs
+      summary: Create a borrower
+      operationId: createBorrowerUsingPOST
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: borrowerDto
+          description: new borrower request body
+          required: true
+          schema:
+            $ref: ./models/request/borrower.yml
+      responses:
+        '201':
+          description: Borrower created
+          schema:
+            $ref: ./models/response/borrower.yml
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Error creating borrower
+          schema:
+            $ref: '#/definitions/ErrorDto'
+      deprecated: false
+  '/borrower/{id}':
+    get:
+      tags:
+        - Borrower APIs
+      summary: Fetch a borrower by id
+      operationId: fetchBorrowerUsingGET
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Borrower fetched
+          schema:
+            $ref: ./models/response/borrower.yml
+        '400':
+          description: Unable to find existing entity
+          schema:
+            $ref: '#/definitions/ErrorDto'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      deprecated: false
+  /borrowers:
+    get:
+      tags:
+        - Borrower APIs
+      summary: Fetch all of an institution's borrowers
+      operationId: fetchBorrowersUsingGET
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Borrowers fetched
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                id:
+                  type: string
+                  format: uuid
+                name:
+                  type: string
+                submissionCount:
+                  type: integer
+                  format: int32
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Unable to find existing entity
+          schema:
+            $ref: '#/definitions/ErrorDto'
+      deprecated: false
+  /institution:
+    get:
+      tags:
+        - Institution APIs
+      summary: Fetch institution from user login token
+      operationId: fetchSiteConfigurationUsingGET
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Institution fetched
+          examples:
+            application/json:
+              $ref: ./examples/institution.json
+          schema:
+            type: object
+            properties:
+              name:
+                type: string
+              configuration:
+                $ref: '#/definitions/JsonNode'
+            title: GetInstitution
+        '400':
+          description: Unable to find existing entity
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      deprecated: false
+    post:
+      tags:
+        - Institution APIs
+      summary: Create an institution
+      operationId: createSiteConfigurationUsingPOST
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: requestBody
+          description: Institution configuration
+          required: true
+          schema:
+            type: object
+            properties:
+              name:
+                type: string
+              configuration:
+                $ref: '#/definitions/JsonNode'
+      responses:
+        '201':
+          description: Institution created
+          examples:
+            application/json:
+              $ref: ./examples/institution.json
+          schema:
+            type: object
+            properties:
+              name:
+                type: string
+              configuration:
+                $ref: '#/definitions/JsonNode'
+            title: PostInstitution
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Error creating institution
+      deprecated: false
+  /submission:
+    post:
+      tags:
+        - Submission APIs
+      summary: Create a submission
+      operationId: createSubmissionUsingPOST
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: submissionDto
+          description: submission request model
+          required: true
+          schema:
+            $ref: ./models/request/submission.yml
+      responses:
+        '201':
+          description: Submission created
+          schema:
+            $ref: ./models/response/submission.yml
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Error creating submission
+          schema:
+            $ref: '#/definitions/ErrorDto'
+      deprecated: false
+  '/submission/{submissionId}':
+    get:
+      tags:
+        - Submission APIs
+      summary: |-
+        Fetch a submission by `id`. It also updates the user's submission viewed flag
+        the first time that submission is requested by a user.
+      operationId: fetchSubmissionUsingGET
+      produces:
+        - application/json
+      parameters:
+        - name: submissionId
+          in: path
+          description: submissionId
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Submission fetched
+          schema:
+            $ref: ./models/response/submission.yml
+        '400':
+          description: Unable to find existing entity
+          schema:
+            $ref: '#/definitions/ErrorDto'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      deprecated: false
+    patch:
+      tags:
+        - Submission APIs
+      summary: Updates just the specific fields in the referenced submission
+      operationId: updateSubmissionUsingPATCH
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: requestBody
+          description: requestBody
+          required: true
+          schema:
+            $ref: '#/definitions/JsonNode'
+        - name: submissionId
+          in: path
+          description: submissionId
+          required: true
+          type: string
+      responses:
+        '204':
+          description: Submission updated
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '500':
+          description: Unable to update entity
+          schema:
+            $ref: '#/definitions/ErrorDto'
+      deprecated: false
+  '/submission/{submissionId}/comments':
+    get:
+      tags:
+        - Submission APIs
+      summary: Fetch submission comments
+      operationId: fetchCommentsUsingGET
+      produces:
+        - application/json
+      parameters:
+        - name: submissionId
+          in: path
+          description: submissionId
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Comments fetched
+          schema:
+            type: array
+            items:
+              $ref: ./models/response/comment-fetch.yml
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Unable to find existing entity
+          schema:
+            $ref: '#/definitions/ErrorDto'
+      deprecated: false
+  '/submission/{submissionId}/activities':
+    get:
+      tags:
+        - Submission APIs
+      summary: Fetch submission activities
+      operationId: fetchActivitiesUsingGET
+      produces:
+        - application/json
+      parameters:
+        - name: endAt
+          in: query
+          description: endAt
+          required: false
+          type: string
+        - name: startAt
+          in: query
+          description: startAt
+          required: false
+          type: string
+        - name: submissionId
+          in: path
+          description: submissionId
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Activities fetched
+          examples:
+            application/json:
+              $ref: ./examples/activity.json
+          schema:
+            type: array
+            items:
+              $ref: ./models/response/activity.yml
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Unable to find existing entity
+          schema:
+            $ref: '#/definitions/ErrorDto'
+      deprecated: false
+  '/submission/{submissionId}/transition/{to}':
+    put:
+      tags:
+        - Submission APIs
+      summary: Transition a submission from its current step to the `to` step
+      operationId: actionTransitionUsingPUT
+      produces:
+        - application/json
+      parameters:
+        - name: submissionId
+          in: path
+          description: submissionId
+          required: true
+          type: string
+        - name: to
+          in: path
+          description: to
+          required: true
+          type: integer
+          format: int32
+      responses:
+        '204':
+          description: Valid/Invalid transition
+          schema:
+            $ref: '#/definitions/ObjectNode'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Error performing step transition for submission
+          schema:
+            $ref: '#/definitions/ErrorDto'
+      deprecated: false
+  /submissions:
+    get:
+      tags:
+        - Submission APIs
+      summary: Fetch assigned submissions
+      operationId: fetchSubmissionsUsingGET
+      produces:
+        - application/json
+      parameters:
+        - name: pathVar
+          in: path
+          description: Path parameter for API variant
+          required: false
+          type: string
+          enum:
+            - count
+      responses:
+        '200':
+          description: Assigned submissions fetched
+          schema:
+            type: array
+            items:
+              $ref: ./models/response/submission-list.yml
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Incorrect path parameter
+        '500':
+          description: Unable to find existing entity
+          schema:
+            $ref: '#/definitions/ErrorDto'
+      deprecated: false
+  /submissions/watching:
+    get:
+      tags:
+        - Submission APIs
+      summary: Fetch watched submissions
+      operationId: fetchWatchedSubmissionsUsingGET
+      produces:
+        - application/json
+      parameters:
+        - name: pathVar
+          in: path
+          description: Path parameter for API variant
+          required: false
+          type: string
+          enum:
+            - count
+      responses:
+        '200':
+          description: Watched submissions fetched
+          schema:
+            type: array
+            items:
+              $ref: ./models/response/submission-list.yml
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Unable to find existing entity
+          schema:
+            $ref: '#/definitions/ErrorDto'
+      deprecated: false
+  '/submissions/watching/{pathVar}':
+    get:
+      tags:
+        - Submission APIs
+      summary: Fetch watched submissions that are not viewed or overdue
+      operationId: fetchWatchedSubmissionsUsingGET_1
+      produces:
+        - application/json
+      parameters:
+        - name: pathVar
+          in: path
+          description: Path parameter for API variant
+          required: false
+          type: string
+          enum:
+            - count
+      responses:
+        '200':
+          description: Fetched count of watched submissions that are not viewed or overdue
+          schema:
+            type: integer
+            format: int32
+            example: 2
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Unable to find existing entity
+          schema:
+            $ref: '#/definitions/ErrorDto'
+      deprecated: false
+  '/submissions/{pathVar}':
+    get:
+      tags:
+        - Submission APIs
+      summary: Fetch count of assigned submissions that are not viewed or overdue
+      operationId: fetchSubmissionsUsingGET_1
+      produces:
+        - application/json
+      parameters:
+        - name: pathVar
+          in: path
+          description: Path parameter for API variant
+          required: false
+          type: string
+          enum:
+            - count
+      responses:
+        '200':
+          description: Fetched count of assigned submissions that are not viewed or overdue
+          schema:
+            type: integer
+            format: int32
+            example: 2
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Incorrect path parameter
+        '500':
+          description: Unable to find existing entity
+          schema:
+            $ref: '#/definitions/ErrorDto'
+      deprecated: false
+  '/comment':
+    post:
+      tags:
+        - Comment APIs
+      summary: Create comment
+      operationId: createCommentUsingPOST
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: commentDto
+          description: new comment request body
+          required: true
+          schema:
+            $ref: ./models/request/comment.yml
+      responses:
+        '200':
+          description: Comment created
+          schema:
+            $ref: ./models/response/comment.yml
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Unable to find existing entity
+          schema:
+            $ref: '#/definitions/ErrorDto'
+      deprecated: false
+  '/comment/{commentId}':
+    get:
+      tags:
+        - Comment APIs
+      summary: Fetch comment
+      operationId: fetchCommentUsingGET
+      produces:
+        - application/json
+      parameters:
+        - name: commentId
+          in: path
+          description: commentId
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Comment fetched
+          schema:
+            $ref: ./models/response/comment-fetch.yml
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Unable to find existing entity
+          schema:
+            $ref: '#/definitions/ErrorDto'
+      deprecated: false
+  /task:
+    post:
+      tags:
+        - Task APIs
+      summary: Create a task
+      operationId: createTaskUsingPOST
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: taskDto
+          description: new task request body
+          required: true
+          schema:
+            $ref: ./models/request/task.yml
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+        '201':
+          description: Task created
+          schema:
+            $ref: ./models/response/task.yml
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Error creating task
+          schema:
+            $ref: '#/definitions/ErrorDto'
+      deprecated: false
+  '/task/{taskId}':
+    get:
+      tags:
+        - Task APIs
+      summary: |-
+        Fetch a task by `id`. It also updates the user's task viewed flag
+        the first time that task is requested by a user.
+      operationId: fetchTaskUsingGET
+      produces:
+        - application/json
+      parameters:
+        - name: taskId
+          in: path
+          description: taskId
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Task fetched
+          schema:
+            $ref: ./models/response/task.yml
+        '400':
+          description: Unable to find existing entity
+          schema:
+            $ref: '#/definitions/ErrorDto'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      deprecated: false
+    patch:
+      tags:
+        - Task APIs
+      summary: Update a task
+      operationId: updateTaskUsingPATCH
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: requestBody
+          description: requestBody
+          required: true
+          schema:
+            $ref: '#/definitions/JsonNode'
+        - name: taskId
+          in: path
+          description: taskId
+          required: true
+          type: string
+      responses:
+        '204':
+          description: Task updated
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '500':
+          description: Unable to update entity
+          schema:
+            $ref: '#/definitions/ErrorDto'
+      deprecated: false
+  /tasks:
+    get:
+      tags:
+        - Task APIs
+      summary: Fetch user created tasks
+      operationId: fetchUserCreatedTasksUsingGET
+      produces:
+        - application/json
+      parameters:
+        - name: pathVar
+          in: path
+          description: pathVar
+          required: false
+          type: string
+      responses:
+        '200':
+          description: Created tasks fetched
+          schema:
+            type: array
+            items:
+              $ref: ./models/response/task.yml
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Incorrect path parameter
+        '500':
+          description: Unable to find existing entity
+          schema:
+            $ref: '#/definitions/ErrorDto'
+      deprecated: false
+  /tasks/assigned:
+    get:
+      tags:
+        - Task APIs
+      summary: Fetch assigned tasks
+      operationId: fetchUserAssignedTasksUsingGET
+      produces:
+        - application/json
+      parameters:
+        - name: pathVar
+          in: path
+          description: pathVar
+          required: false
+          type: string
+      responses:
+        '200':
+          description: Assigned tasks fetched
+          schema:
+            type: array
+            items:
+              $ref: ./models/response/task.yml
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Incorrect path parameter
+        '500':
+          description: Unable to find existing entity
+          schema:
+            $ref: '#/definitions/ErrorDto'
+      deprecated: false
+  '/tasks/assigned/{pathVar}':
+    get:
+      tags:
+        - Task APIs
+      summary: Fetch count of assigned tasks that are not viewed or overdue
+      operationId: fetchUserAssignedTasksUsingGET_1
+      produces:
+        - application/json
+      parameters:
+        - name: pathVar
+          in: path
+          description: pathVar
+          required: true
+          type: string
+      responses:
+        '200':
+          description: fetched count of assigned tasks that are not viewed or overdue
+          schema:
+            type: integer
+            format: int32
+            example: 2
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Incorrect path parameter
+        '500':
+          description: Unable to find existing entity
+          schema:
+            $ref: '#/definitions/ErrorDto'
+      deprecated: false
+  '/tasks/{pathVar}':
+    get:
+      tags:
+        - Task APIs
+      summary: Fetch user created tasks that are not viewed or overdue
+      operationId: fetchUserCreatedTasksUsingGET_1
+      produces:
+        - application/json
+      parameters:
+        - name: pathVar
+          in: path
+          description: pathVar
+          required: true
+          type: string
+      responses:
+        '200':
+          description: fetched count of created tasks that are not viewed or overdue
+          schema:
+            type: integer
+            format: int32
+            example: 2
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Incorrect path parameter
+        '500':
+          description: Unable to find existing entity
+          schema:
+            $ref: '#/definitions/ErrorDto'
+      deprecated: false
+  /user:
+    post:
+      tags:
+        - User APIs
+      summary: Create an user
+      operationId: createUserUsingPOST
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: userDto
+          description: new user request body
+          required: true
+          schema:
+            $ref: ./models/request/user.yml
+      responses:
+        '201':
+          description: User created
+          schema:
+            $ref: ./models/response/user.yml
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Error creating user
+          schema:
+            $ref: '#/definitions/ErrorDto'
+      deprecated: false
+  /user/logout:
+    post:
+      tags:
+        - User APIs
+      summary: Removes session/access tokens & logout an user
+      operationId: logoutUsingPOST
+      produces:
+        - '*/*'
+      responses:
+        '200':
+          description: User logged out
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Error logging out user
+          schema:
+            $ref: '#/definitions/ErrorDto'
+      deprecated: false
+  /user/me:
+    get:
+      tags:
+        - User APIs
+      summary: userDetails
+      operationId: userDetailsUsingGET
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: ./models/response/user.yml
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      deprecated: false
+  /users:
+    get:
+      tags:
+        - User APIs
+      summary: Fetch all of institution's users
+      operationId: fetchInstitutionUsersUsingGET
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: users fetched
+          schema:
+            type: array
+            items:
+              $ref: ./models/response/user-list.yml
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Incorrect path parameter
+        '500':
+          description: Unable to find existing entity
+          schema:
+            $ref: '#/definitions/ErrorDto'
+      deprecated: false
+  /workflow:
+    post:
+      tags:
+        - Workflow APIs
+      summary: Create a workflow
+      operationId: createWorkFlowUsingPOST
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: workflowDto
+          description: new workflow request body
+          required: true
+          schema:
+            $ref: ./models/request/workflow.yml
+      responses:
+        '201':
+          description: Workflow created
+          schema:
+            $ref: ./models/response/workflow.yml
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Error creating workflow
+          schema:
+            $ref: '#/definitions/ErrorDto'
+      deprecated: false
+  /workflows:
+    get:
+      tags:
+        - Workflow APIs
+      summary: Fetch all of an institution's workflows
+      operationId: fetchWorkFlowsUsingGET
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Workflows fetched
+          schema:
+            type: array
+            items:
+              $ref: ./models/response/workflow.yml
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Error fetching workflows
+          schema:
+            $ref: '#/definitions/ErrorDto'
+      deprecated: false
+  /ckeditor/{access_token}:
+    get:
+      tags:
+        - CKEditor APIs
+      summary: Generates jwt token for CKEditor
+      operationId: generateJWTTokenUsingGET
+      produces:
+        - application/text
+      parameters:
+        - name: accessToken
+          in: path
+          description: access token
+          required: true
+          type: string
+      responses:
+        '200':
+          description: JWT token generated
+          schema:
+            $ref: ./models/response/ckeditor.yml
+          examples:
+            application/text:
+              $ref: ./examples/jwtToken.txt
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Error generating token
+          schema:
+            $ref: '#/definitions/ErrorDto'
+      deprecated: false
+  /notifications:
+    get:
+      tags:
+        - Notification APIs
+      summary: Fetches notifications of the logged in user for between date ranges
+      operationId: fetchNotificationsUsingGET
+      produces:
+        - application/json
+      parameters:
+        - name: startAt
+          in: query
+          description: Fetch notifications after this date-and-time (zulu time date string)
+          required: false
+          type: string
+          format: date-time
+        - name: endAt
+          in: query
+          description:  Fetch notifications before this date-and-time (zulu time date string)
+          required: false
+          type: string
+          format: date-time
+      responses:
+        '200':
+          description: Notifications fetched
+          schema:
+            $ref: ./models/response/notification-get.yml
+          examples:
+            application/text:
+              $ref: ./examples/notifications.json
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Error generating token
+          schema:
+            $ref: '#/definitions/ErrorDto'
+      deprecated: false
+  /notifications/{pathVar}:
+    get:
+      tags:
+        - Notification APIs
+      summary: Fetch notifications count for user between date ranges
+      operationId: fetchNotificationsUsingGET_1
+      produces:
+        - application/json
+      parameters:
+        - name: startAt
+          in: query
+          description: Fetch notifications after this date-and-time (zulu time date string)
+          required: false
+          type: string
+          format: date-time
+        - name: endAt
+          in: query
+          description: Fetch notifications before this date-and-time (zulu time date string)
+          required: false
+          type: string
+          format: date-time
+        - name: pathVar
+          in: path
+          description: Path parameter for API variant
+          required: false
+          type: string
+          enum:
+            - count
+      responses:
+        '200':
+          description: Fetched notifications count for user
+          schema:
+            type: integer
+            format: int32
+            example: 2
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Incorrect path parameter
+        '500':
+          description: Unable to find existing entity
+          schema:
+            $ref: '#/definitions/ErrorDto'
+      deprecated: false
+    patch:
+      tags:
+        - Notification APIs
+      summary: Updates all notifications of the user
+      operationId: updateNotificationsUsingPATCH
+      parameters:
+        - name: pathVar
+          in: path
+          description: Path parameter for API variant
+          required: true
+          type: string
+          enum:
+            - markAllRead
+      responses:
+        '204':
+          description: Notification updated
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '500':
+          description: Unable to update entity
+          schema:
+            $ref: '#/definitions/ErrorDto'
+      deprecated: false
+  /notification:
+    post:
+      tags:
+        - Notification APIs
+      summary: Create a notification
+      operationId: createNotificationUsingPOST
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: notificationDto
+          description: notification request model
+          required: true
+          schema:
+            $ref: ./models/request/notification.yml
+      responses:
+        '201':
+          description: Notification created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Error creating notification
+          schema:
+            $ref: '#/definitions/ErrorDto'
+      deprecated: false
+definitions:
+  ErrorDto:
+    type: object
+    required:
+      - entity
+      - message
+    properties:
+      details:
+        type: string
+      entity:
+        type: string
+      id:
+        type: string
+      message:
+        type: string
+    title: ErrorDto
+  KeyValueDto:
+    type: object
+    required:
+      - key
+      - value
+    properties:
+      key:
+        type: string
+      value:
+        type: string
+    title: KeyValueDto
+  IdNameDto:
+    type: object
+    required:
+      - id
+      - name
+    properties:
+      id:
+        type: string
+        format: uuid
+      name:
+        type: string
+    title: IdNameDto
+  JsonNode:
+    type: object
+    title: JsonNode
+  ObjectNode:
+    type: object
+    title: ObjectNode
+
+
+
+

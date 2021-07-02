@@ -1,0 +1,16 @@
+type: object
+properties:
+  index:
+    type: integer
+    format: int32
+    description: step number
+  name:
+    type: string
+  label:
+    originalRef: JsonNode
+    $ref: '#/definitions/JsonNode'
+  transitions:
+    type: array
+    items:
+      $ref: ./models/steptransition.yml
+title: WorkflowStep

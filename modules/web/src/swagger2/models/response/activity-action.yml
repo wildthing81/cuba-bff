@@ -1,0 +1,9 @@
+type: object
+properties:
+  label:
+    type: string
+  payload:
+    type: array
+    items:
+      $ref: '#/definitions/KeyValueDto'
+title: Action

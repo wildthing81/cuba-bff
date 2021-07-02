@@ -1,0 +1,49 @@
+# Compiled class file
+*.class
+
+# Log file
+*.log
+
+# BlueJ files
+*.ctxt
+
+# Mobile Tools for Java (J2ME)
+.mtj.tmp/
+
+# Package Files #
+*.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+hs_err_pid*
+
+### Gradle ###
+.gradle
+/build/
+
+# Ignore Gradle GUI config
+gradle-app.setting
+
+# Avoid ignoring Gradle wrapper jar file (.jar files are usually ignored)
+!gradle-wrapper.jar
+
+# Cuba build dirs
+/modules/core/build
+/modules/web/build
+/modules/global/build
+deploy
+
+#OSX desktop database
+*.DS_Store
+
+#local files
+.vscode
+.idea
+
+# Dockerfile.local and .idea were being ignored but they were also actually checked in.
+# For now I have adjusted this to reflect reality as the Dockerfile.local is needed for docker-compose to run

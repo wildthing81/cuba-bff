@@ -1,0 +1,42 @@
+type: object
+properties:
+  name:
+    type: string
+  submissionDefaults:
+    $ref: '#/definitions/JsonNode'
+  customerType:
+    type: string
+  marketCap:
+    type: integer
+    format: int64
+  cadLevel:
+    type: integer
+    format: int32
+  customerGroup:
+    type: string
+  businessUnit:
+    type: string
+  anzsic:
+    type: string
+  ccrRiskScore:
+    type: integer
+    format: int32
+  securityIndex:
+    type: string
+  externalRatingAndOutLook:
+    type: integer
+    format: int32
+  lastFullReviewAt:
+    type: string
+  lastScheduleReviewAt:
+    type: string
+  nextScheduleReviewAt:
+    type: string
+  riskSignOff:
+    type: string
+  regulatoryRequirements:
+    type: string
+  submissionCount:
+    type: integer
+    format: int32
+title: PostBorrower

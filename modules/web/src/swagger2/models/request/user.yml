@@ -1,0 +1,26 @@
+type: object
+properties:
+  login:
+    type: string
+  password:
+    type: string
+  firstName:
+    type: string
+  middleName:
+    type: string
+  lastName:
+    type: string
+  position:
+    type: string
+  email:
+    type: string
+  profileImage:
+    type: string
+  cadLevel:
+    type: integer
+    format: int32
+  preferences:
+    required: false
+    originalRef: JsonNode
+    $ref: '#/definitions/JsonNode'
+title: PostUser

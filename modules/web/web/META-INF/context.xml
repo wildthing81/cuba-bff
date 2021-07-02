@@ -1,0 +1,10 @@
+<!--
+  ~ The code is copyright ©2021
+  -->
+
+<Context>
+
+    <!-- Switch off session serialization -->
+    <Manager pathname=""/>
+
+</Context>

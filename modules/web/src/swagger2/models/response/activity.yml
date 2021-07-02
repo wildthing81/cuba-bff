@@ -1,0 +1,15 @@
+type: object
+properties:
+  type:
+    type: string
+  message:
+    type: string
+  timestamp:
+    type: string
+  action:
+    $ref: ./models/response/activity-action.yml
+  priority:
+    type: string
+  status:
+    type: string
+title: Activity

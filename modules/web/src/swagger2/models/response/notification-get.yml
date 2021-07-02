@@ -1,0 +1,26 @@
+type: object
+properties:
+  text:
+    type: string
+  payload:
+    $ref: '#/definitions/KeyValueDto'
+    description: key-value pairs to identify notification action
+  isRead:
+    type: boolean
+    description: true if notification is read by user
+  isHidden:
+    type: boolean
+    description:  true if notification is hidden
+  id:
+    type: string
+    format: uuid
+    description: notification id
+  createdAt:
+    type: string
+    format: date-time
+    description: zulu time format
+  to:
+    type: string
+    format: uuid
+    description: user who receives the notification
+title: GetNotification

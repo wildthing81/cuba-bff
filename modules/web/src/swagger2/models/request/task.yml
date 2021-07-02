@@ -1,0 +1,23 @@
+type: object
+required:
+  - assignee
+properties:
+  submissionId:
+    type: string
+  assignee:
+    type: string
+    description: user the task is assigned to
+  category:
+    type: string
+    description: decision or work
+  description:
+    type: string
+  due:
+    type: string
+  status:
+    type: string
+    description: depends on category and type
+  type:
+    type: string
+    description: one of ['formal' or 'informal'] if category is decision, else 'work'
+title: PostTask

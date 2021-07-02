@@ -1,0 +1,58 @@
+{
+  "name": "default-workflow",
+  "steps": [
+    {
+      "index": 1,
+      "name": "Drafting",
+      "layout": {
+        "commentsVisible": true,
+        "submissionAnalysisEditable": true
+      },
+      "transitions": [
+        {
+          "to": 2,
+          "label": "Submit to Credit",
+          "trigger": "user-initiated",
+          "submissionStatus": "pending",
+          "borrowerRefresh": false
+        }
+      ]
+    },
+    {
+      "index": 2,
+      "name": "Credit Review",
+      "layout": {
+        "commentsVisible": true,
+        "submissionAnalysisEditable": false
+      },
+      "transitions": [
+        {
+          "to": 3,
+          "label": "Approve",
+          "trigger": "user-initiated",
+          "submissionStatus": "approved",
+          "borrowerRefresh": true
+        }
+      ]
+    },
+    {
+      "index": 3,
+      "name": "Approved",
+      "layout": {
+        "commentsVisible": false,
+        "submissionAnalysisEditable": false
+      },
+      "transitions": []
+    }
+  ],
+  "initialStatus": "drafting",
+  "submissionTypes": [
+    "new-facility",
+    "limit-increase",
+    "limit-reduction",
+    "risk-grading",
+    "annual-review",
+    "other"
+  ],
+  "version": 1
+}

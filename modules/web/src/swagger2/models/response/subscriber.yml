@@ -1,0 +1,9 @@
+type: object
+properties:
+  isRead:
+    type: boolean
+  isHidden:
+    type: boolean
+  user:
+    type: ./models/response/user.yml
+title: Activity

@@ -1,0 +1,107 @@
+[
+  {
+    "type": "submission",
+    "message": "Jay created this submission",
+    "timestamp": "2021-01-21T01:47:25Z"
+  },
+  {
+    "type": "decision",
+    "action": {
+      "label": "View Formal Decision",
+      "payload": [
+        {
+          "key": "id",
+          "value": "8fd83bc5-df30-4385-98b6-20090da890fd"
+        }
+      ]
+    },
+    "message": "Jay assigned a formal decision to Bob. {action}",
+    "timestamp": "2021-01-21T01:47:47Z"
+  },
+  {
+    "type": "work",
+    "action": {
+      "label": "View Work Task",
+      "payload": [
+        {
+          "key": "id",
+          "value": "ba234657-fd4e-568d-2ead-0521c31b88e2"
+        }
+      ]
+    },
+    "status": "Withdrawn",
+    "priority": "error",
+    "message": "Jay withdrew the work task. {action}",
+    "timestamp": "2021-01-21T01:49:39Z"
+  },
+  {
+    "type": "submission-section",
+    "action": {
+      "label": "Transaction overview",
+      "payload": [
+        {
+          "key": "submissionId",
+          "value": "ba234657-fd4e-568d-2ead-0521c31b88e2"
+        },
+        {
+          "key": "section",
+          "value": "transaction-overview"
+        }
+      ]
+    },
+    "message": "Jay edited the {action} section.",
+    "timestamp": "2021-01-22T01:51:39Z"
+  },
+  {
+    "meta": [
+      {
+        "key": "comment",
+        "value": "And when Alexander saw the breadth of his domain, he wept, for there were no more worlds to conquer. Benefits of a classical education"
+      },
+      {
+        "key": "author",
+        "value": "Jay"
+      }
+    ],
+    "message": "Jay added a comment to a submission",
+    "timestamp": "2021-01-21T11:11:47Z"
+  },
+  {
+    "type": "work",
+    "action": {
+      "label": "View Work Task",
+      "payload": [
+        {
+          "key": "id",
+          "value": "ba234657-fd4e-568d-2ead-0521c31b88e2"
+        }
+      ]
+    },
+    "status": "Created",
+    "priority": "success",
+    "message": "Jay assigned a work task to Rachael. {action}",
+    "timestamp": "2021-01-25T10:49:39Z",
+    "meta": [
+      {
+        "key": "taskId",
+        "value": "ba234657-fd4e-568d-2ead-0521c31b88e2"
+      },
+      {
+        "key": "due",
+        "value": "2021-03-01T11:00:00.000Z"
+      },
+      {
+        "key": "status",
+        "value": "pending"
+      },
+      {
+        "key": "assigneeName",
+        "value": "Rachael Relationship"
+      },
+      {
+        "key": "assigneeId",
+        "value": "fd4e-568d-2ead-ba234657-568d"
+      }
+    ]
+  }
+]

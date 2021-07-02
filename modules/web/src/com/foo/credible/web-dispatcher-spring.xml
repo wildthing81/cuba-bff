@@ -1,0 +1,8 @@
+<!--
+  ~ The code is copyright ©2021
+  -->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context">
+
+</beans>

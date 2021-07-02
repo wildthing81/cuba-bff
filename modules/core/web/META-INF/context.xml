@@ -1,0 +1,20 @@
+<!--
+  ~ The code is copyright ©2021
+  -->
+
+<Context>
+    
+    <!-- Switch off session serialization -->
+    <Manager pathname=""/>
+    <!-- Database connection-->
+    <!--<Resource driverClassName="org.postgresql.Driver"
+              maxIdle="2"
+              maxTotal="20"
+              maxWaitMillis="5000"
+              name="jdbc/CubaDS"
+              password="credible"
+              type="javax.sql.DataSource"
+              url="jdbc:postgresql://dev-credible-be-db.cluster-c6bt11iaovni.ap-southeast-2.rds.amazonaws.com/credibledb"
+              username="credible"/>-->
+
+</Context>

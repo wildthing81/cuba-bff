@@ -1,0 +1,1024 @@
+{
+	"info": {
+		"_postman_id": "387244bd-c1ef-404f-84d7-da754c0112af",
+		"name": "Credible",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "submission-comment",
+			"item": [
+				{
+					"name": "Get Submission Comments",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{access_token}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "{{host}}/app/rest/submission/{{submission_id}}/comments"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Comment by id",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{access_token}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": "{{host}}/app/rest/comment/{{comment_id}}"
+					},
+					"response": []
+				},
+				{
+					"name": "Create comment",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"comment_id\", pm.response.json().id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{access_token}}"
+							}
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"submissionId\": \"{{submission_id}}\",\n    \"text\": \"First comment\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{host}}/app/rest/comment"
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Oauth2 token",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.environment.set(\"access_token\", pm.response.json().access_token);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": {
+						"password": "secret",
+						"username": "credible-ui"
+					}
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "",
+						"value": "",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "grant_type",
+							"value": "password",
+							"type": "text"
+						},
+						{
+							"key": "username",
+							"value": "anna",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "anna123",
+							"type": "text"
+						}
+					]
+				},
+				"url": "{{host}}/app/rest/v2/oauth/token"
+			},
+			"response": []
+		},
+		{
+			"name": "Post Site config",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{access_token}}"
+					}
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "con",
+						"value": "",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"ANZ Banking Group Limited\",\n    \"configuration\": {\n        \"jobs\": [\n            {\n                \"slug\": \"rm\",\n                \"title\": \"Relationship Manager\"\n            },\n            {\n                \"slug\": \"ra\",\n                \"title\": \"Research Analyst\"\n            },\n            {\n                \"slug\": \"co\",\n                \"title\": \"Credit Officer\"\n            },\n            {\n                \"slug\": \"po\",\n                \"title\": \"Product Owner\"\n            }\n        ],\n        \"workflowSteps\": [\n            \"Drafting\",\n            \"Credit Review\",\n            \"Approved\"\n        ],\n        \"submissionTypes\": [\n            {\n                \"slug\": \"new-facility\",\n                \"title\": \"New Facility\"\n            },\n            {\n                \"slug\": \"limit-increase\",\n                \"title\": \"Limit Increase\"\n            },\n            {\n                \"slug\": \"limit-reduction\",\n                \"title\": \"Limit Reduction\"\n            },\n            {\n                \"slug\": \"risk-grading\",\n                \"title\": \"Risk Grading\"\n            },\n            {\n                \"slug\": \"approval-review\",\n                \"title\": \"Approval Review\"\n            },\n            {\n                \"slug\": \"other\",\n                \"title\": \"Other\"\n            }\n        ],\n        \"submissionTemplate\": [\n            {\n                \"slug\": \"summary\",\n                \"title\": \"Summary\"\n            },\n            {\n                \"slug\": \"other-limits\",\n                \"title\": \"Other Limits\"\n            },\n            {\n                \"slug\": \"notional\",\n                \"title\": \"Contingent / Other Liabilities  (not Grouped) / Notional Grouping\"\n            },\n            {\n                \"slug\": \"decision\",\n                \"title\": \"Decision Required\"\n            },\n            {\n                \"slug\": \"facility-uncommitted\",\n                \"title\": \"Comment on whether the facility is uncommitted and / or unadvised\"\n            },\n            {\n                \"slug\": \"additional-item\",\n                \"title\": \"Additional item for approving and noting\"\n            },\n            {\n                \"slug\": \"transaction-overview\",\n                \"title\": \"Transaction overview\"\n            },\n            {\n                \"slug\": \"pricing-summary\",\n                \"title\": \"Pricing Summary\"\n            },\n            {\n                \"slug\": \"relationship\",\n                \"title\": \"Relationship / Credit Strategy / Rationale\"\n            },\n            {\n                \"slug\": \"terms\",\n                \"title\": \"Key Terms & Conditions\"\n            },\n            {\n                \"slug\": \"business-summary\",\n                \"title\": \"Customer, Business and Industry Summary\"\n            },\n            {\n                \"slug\": \"risk-grading\",\n                \"title\": \"Risk Grading\"\n            },\n            {\n                \"slug\": \"financial-analysis\",\n                \"title\": \"Financial Analysis\"\n            },\n            {\n                \"slug\": \"risks\",\n                \"title\": \"Risks & Mitigants\"\n            },\n            {\n                \"slug\": \"assumptions\",\n                \"title\": \"Basis of Financial Analysis & Financial Forecast Assumptions\"\n            },\n            {\n                \"slug\": \"conclusions\",\n                \"title\": \"Conclusions on Financial Analysis - Historical\"\n            }\n        ],\n        \"submissionStatus\": [\n            {\n                \"slug\": \"drafting\",\n                \"title\": \"Drafting\"\n            },\n            {\n                \"slug\": \"pending\",\n                \"title\": \"Pending formal decision\"\n            },\n            {\n                \"slug\": \"approved\",\n                \"title\": \"Approved\"\n            },\n            {\n                \"slug\": \"declined\",\n                \"title\": \"Declined\"\n            },\n            {\n                \"slug\": \"withdrawn\",\n                \"title\": \"Withdrawn\"\n            }\n        ],\n        \"reviewStatus\": {\n            \"formal\": [\n                {\n                    \"slug\": \"endorsed\",\n                    \"title\": \"Endorsed\"\n                },\n                {\n                    \"slug\": \"rework\",\n                    \"title\": \"Rework required\"\n                },\n                {\n                    \"slug\": \"pending\",\n                    \"title\": \"Pending\"\n                },\n                {\n                    \"slug\": \"abstained\",\n                    \"title\": \"Abstained\"\n                }\n            ],\n            \"informal\": [\n                {\n                    \"slug\": \"approved\",\n                    \"title\": \"Approved\"\n                },\n                {\n                    \"slug\": \"rework\",\n                    \"title\": \"Rework required\"\n                },\n                {\n                    \"slug\": \"pending\",\n                    \"title\": \"Pending\"\n                },\n                {\n                    \"slug\": \"declined\",\n                    \"title\": \"Declined\"\n                }\n            ]\n        },\n        \"taskStatus\": [\n            {\n                \"slug\": \"complete\",\n                \"title\": \"Complete\"\n            },\n            {\n                \"slug\": \"incomplete\",\n                \"title\": \"Incomplete\"\n            }\n        ],\n        \"exceptions\": [\n            {\n                \"slug\": \"group-entities-rating\",\n                \"title\": \"Rating of group entities without financial statements\",\n                \"area\": \"pricing-summary\",\n                \"description\": \"Rating of group entities without financial statements\"\n            }\n        ]\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://{{host}}/app/rest/institution"
+			},
+			"response": []
+		},
+		{
+			"name": "Create Borrower",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.environment.set(\"borrower_id\", pm.response.json().id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{access_token}}"
+					}
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "",
+						"value": "",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"name\": \"bhp\",\n    \"submissionDefaults\": [\n        {\n            \"slug\": \"financial-analysis\",\n            \"text\": \"The quick brown fox jumps over the lazy dog\"\n        },\n        {\n            \"slug\": \"pricing-summary\",\n            \"text\": \"Come out to the coast, we'll get together, have a few laughs!!\"\n        }\n    ],\n  \"customerType\" : \"Tier 1 - Finiancial\",\n  \"marketCap\": 100000,\n  \"cadLevel\": 100,\n  \"customerGroup\": \"FINTECH\",\n  \"businessUnit\": \"BU\",\n  \"anzsic\": \"B-0600\",\n  \"ccrRiskScore\": 68,\n  \"securityIndex\": \"ASD23\",\n  \"externalRatingAndOutLook\": 8,\n  \"lastFullReviewAt\": \"2020-08-01T00:40:09.327Z\",\n  \"lastScheduleReviewAt\": \"2020-08-01T00:40:09.876Z\",\n  \"nextScheduleReviewAt\": \"2021-08-01T00:40:09.456Z\",\n  \"riskSignOff\": \"Y\",\n  \"regulatoryRequirements\" : \"Y\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{host}}/app/rest/borrower"
+			},
+			"response": []
+		},
+		{
+			"name": "Create Submission",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.environment.set(\"submission_id\", pm.response.json().id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{access_token}}"
+					}
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "",
+						"value": "",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"borrower\": \"733a4f42-f6cb-50d2-f4f1-0d43f9c6f713\",\n    \"purposes\": [\n        \"test_purpose\"\n    ],\n    \"types\": [\n        \"new-facility\"\n    ],\n    \"note\": \"test note\",\n    \"team\": [\n        \"a405db59-e674-4f63-8afe-269dda788fe8\",\n        \"60885987-1b61-4247-94c7-dff348347f93\"\n    ],\n    \"due\": \"2020-12-14T00:40:09.456Z\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{host}}/app/rest/submission"
+			},
+			"response": []
+		},
+		{
+			"name": "Create Decision Task",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.environment.set(\"task_id\", pm.response.json().id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{access_token}}"
+					}
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "",
+						"value": "",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"submissionId\":\"{{submission_id}}\",\n    \"category\": \"decision\",\n    \"due\": \"2020-12-14T00:40:09.456Z\",\n    \"type\": \"formal\",\n    \"status\": \"pending\",\n    \"description\": \"test task\",\n    \"assignee\": \"69277781-6978-f0ee-af77-bd828a959e50\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{host}}/app/rest/task"
+			},
+			"response": []
+		},
+		{
+			"name": "Create Work Task Copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.environment.set(\"task_id\", pm.response.json().id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{access_token}}"
+					}
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "",
+						"value": "",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"submissionId\":\"{{submission_id}}\",\n    \"category\": \"work\",\n    \"due\": \"2020-12-14T00:40:09.456Z\",\n    \"type\": \"formal\",\n    \"status\": \"pending\",\n    \"description\": \"test task\",\n    \"assignee\": \"ec818790-add0-c3f2-6a94-f745a82b68c4\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{host}}/app/rest/task"
+			},
+			"response": []
+		},
+		{
+			"name": "Create User",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{access_token}}"
+					}
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"login\": \"rama3546\",\n  \"password\": \"abcd1234\",\n  \"firstName\": \"Ram\",\n  \"middleName\": \"R\",\n  \"lastName\": \"Iyer\",\n  \"email\": \"rama354@example.tes\",\n  \"position\": \"developer\",\n  \"profileImage\": \"https://randomuser.me/api/portraits/women/71.jpg\",\n  \"cadLevel\": 1500\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{host}}/app/rest/user"
+			},
+			"response": []
+		},
+		{
+			"name": "User logout",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{access_token}}"
+					}
+				},
+				"method": "POST",
+				"header": [],
+				"url": "{{host}}/app/rest/user/logout"
+			},
+			"response": []
+		},
+		{
+			"name": "Create Workflow",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{access_token}}"
+					}
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n        \"id\": \"88491dea-98dd-e8db-ae72-e4b017a50e47\",\n        \"name\": \"default-workflow\",\n        \"steps\": [\n            {\n                \"index\": 1,\n                \"name\": \"Drafting\",\n                \"layout\": {\n                    \"commentsVisible\": true,\n                    \"submissionAnalysisEditable\": true\n                },\n                \"transitions\": [\n                    {\n                        \"to\": 2,\n                        \"label\": \"Submit to Credit\",\n                        \"trigger\": \"user-initiated\",\n                        \"submissionStatus\": \"pending\",\n                        \"borrowerRefresh\": false\n                    }\n                ]\n            },\n            {\n                \"index\": 2,\n                \"name\": \"Credit Review\",\n                \"layout\": {\n                    \"commentsVisible\": true,\n                    \"submissionAnalysisEditable\": false\n                },\n                \"transitions\": [\n                    {\n                        \"to\": 5,\n                        \"label\": \"Decline\",\n                        \"trigger\": \"user-initiated\",\n                        \"submissionStatus\": \"declined\",\n                        \"borrowerRefresh\": false\n                    },\n                    {\n                        \"to\": 1,\n                        \"label\": \"Rework\",\n                        \"trigger\": \"user-initiated\",\n                        \"submissionStatus\": \"drafting\",\n                        \"borrowerRefresh\": false\n                    },\n                    {\n                        \"to\": 3,\n                        \"label\": \"Approve\",\n                        \"trigger\": \"user-initiated\",\n                        \"submissionStatus\": \"approved\",\n                        \"borrowerRefresh\": true\n                    }\n                ]\n            },\n            {\n                \"index\": 3,\n                \"name\": \"Setup Facility\",\n                \"layout\": {\n                    \"commentsVisible\": false,\n                    \"submissionAnalysisEditable\": false\n                },\n                \"transitions\": [\n                    {\n                        \"to\": 4,\n                        \"label\": \"Setup Complete\",\n                        \"trigger\": \"user-initiated\",\n                        \"submissionStatus\": \"done\",\n                        \"borrowerRefresh\": true\n                    }\n                ]\n            },\n            {\n                \"index\": 4,\n                \"name\": \"Completed Submissions\",\n                \"layout\": {\n                    \"commentsVisible\": false,\n                    \"submissionAnalysisEditable\": false\n                },\n                \"transitions\": []\n            },\n            {\n                \"index\": 5,\n                \"name\": \"Failed Submissions\",\n                \"layout\": {\n                    \"commentsVisible\": false,\n                    \"submissionAnalysisEditable\": false\n                },\n                \"transitions\": [\n                    {\n                        \"to\": 1,\n                        \"label\": \"Rework\",\n                        \"trigger\": \"user-initiated\",\n                        \"submissionStatus\": \"done\",\n                        \"borrowerRefresh\": false\n                    }\n                ]\n            }\n        ],\n        \"initialStatus\": \"drafting\",\n        \"submissionTypes\": [\n            \"new-facility\",\n            \" limit-increase\",\n            \" limit-reduction\",\n            \" approval-review\",\n            \" risk-grading\",\n            \" annual-review\",\n            \" other\"\n        ],\n        \"author\": {\n            \"id\": \"2f7f870b-ad5a-a662-381d-e17d5dafce60\",\n            \"name\": \"Vaughan Dixon\"\n        },\n        \"createdAt\": \"2021-02-08T01:58:08.623Z\",\n        \"updatedAt\": \"2021-02-08T01:58:08.623Z\",\n        \"version\": 1\n    }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{host}}/app/rest/workflow"
+			},
+			"response": []
+		},
+		{
+			"name": "Update Task",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{access_token}}"
+					}
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"description\": \"compelting the task\",\n    \"status\": \"complete\",\n    \"note\": \"hello this is note\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{host}}/app/rest/task/{{task_id}}"
+			},
+			"response": []
+		},
+		{
+			"name": "Update Borrower",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{access_token}}"
+					}
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"riskSignOff\": \"Y\",\n    \"anzsic\": \"ABC12\",\n    \"ccrRiskScore\": 79,\n    \"securityIndex\": \"RGTF34\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{host}}/app/rest/borrower/{{borrower_id}}"
+			},
+			"response": []
+		},
+		{
+			"name": "Update Submission",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{access_token}}"
+					}
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"isFlagged\": true\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{host}}/app/rest/submission/{{submission_id}}"
+			},
+			"response": []
+		},
+		{
+			"name": "Step Transition",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{access_token}}"
+					}
+				},
+				"method": "PUT",
+				"header": [],
+				"url": "{{host}}/app/rest/submission/{{submission_id}}/transition/3"
+			},
+			"response": []
+		},
+		{
+			"name": "App-Core health check",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "http://localhost:8080/app-core/remoting/health"
+			},
+			"response": []
+		},
+		{
+			"name": "Get Site config",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{access_token}}"
+					}
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "",
+						"value": "",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{host}}/app/rest/institution"
+			},
+			"response": []
+		},
+		{
+			"name": "Get Borrower by id",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{access_token}}"
+					}
+				},
+				"method": "GET",
+				"header": [],
+				"url": "{{host}}/app/rest/borrower/{{borrower_id}}"
+			},
+			"response": []
+		},
+		{
+			"name": "Get Submission By Id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{access_token}}"
+					}
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "",
+						"type": "text",
+						"value": "",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{host}}/app/rest/submission/{{submission_id}}"
+			},
+			"response": []
+		},
+		{
+			"name": "Get Task By Id",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{access_token}}"
+					}
+				},
+				"method": "GET",
+				"header": [],
+				"url": "{{host}}/app/rest/task/{{task_id}}"
+			},
+			"response": []
+		},
+		{
+			"name": "All User Submissons",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{access_token}}"
+					}
+				},
+				"method": "GET",
+				"header": [],
+				"url": "{{host}}/app/rest/submissions"
+			},
+			"response": []
+		},
+		{
+			"name": "All User Submissons count",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{access_token}}"
+					}
+				},
+				"method": "GET",
+				"header": [],
+				"url": "{{host}}/app/rest/submissions/count"
+			},
+			"response": []
+		},
+		{
+			"name": "All User created Tasks",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{access_token}}"
+					}
+				},
+				"method": "GET",
+				"header": [],
+				"url": "{{host}}/app/rest/tasks"
+			},
+			"response": []
+		},
+		{
+			"name": "All User created Tasks Count",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{access_token}}"
+					}
+				},
+				"method": "GET",
+				"header": [],
+				"url": "{{host}}/app/rest/tasks/count"
+			},
+			"response": []
+		},
+		{
+			"name": "All User assigned Tasks",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{access_token}}"
+					}
+				},
+				"method": "GET",
+				"header": [],
+				"url": "{{host}}/app/rest/tasks/assigned"
+			},
+			"response": []
+		},
+		{
+			"name": "All User assigned Tasks count",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{access_token}}"
+					}
+				},
+				"method": "GET",
+				"header": [],
+				"url": "{{host}}/app/rest/tasks/assigned/count"
+			},
+			"response": []
+		},
+		{
+			"name": "Watched submissions",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{access_token}}"
+					}
+				},
+				"method": "GET",
+				"header": [],
+				"url": "{{host}}/app/rest/submissions/watching"
+			},
+			"response": []
+		},
+		{
+			"name": "Watched submissions count",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{access_token}}"
+					}
+				},
+				"method": "GET",
+				"header": [],
+				"url": "{{host}}/app/rest/submissions/watching/count"
+			},
+			"response": []
+		},
+		{
+			"name": "User details",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{access_token}}"
+					}
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Origin",
+						"value": "http://localhost:3000",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"url": "{{host}}/app/rest/user/me"
+			},
+			"response": []
+		},
+		{
+			"name": "Get CKEditor Token",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{access_token}}"
+					}
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Origin",
+						"value": "http://localhost:3000",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"url": "{{host}}/app/rest/ckeditor/{{access_token}}"
+			},
+			"response": []
+		},
+		{
+			"name": "Get Borrowers",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{access_token}}"
+					}
+				},
+				"method": "GET",
+				"header": [],
+				"url": "{{host}}/app/rest/borrowers"
+			},
+			"response": []
+		},
+		{
+			"name": "Get Notifications",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{access_token}}"
+					}
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "",
+						"type": "text",
+						"value": "",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "{{host}}/app/rest/notifications?startAt=2020-02-05T04:20:00.945Z&endAt=2022-02-05T04:20:00.945Z",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"app",
+						"rest",
+						"notifications"
+					],
+					"query": [
+						{
+							"key": "startAt",
+							"value": "2020-02-05T04:20:00.945Z"
+						},
+						{
+							"key": "endAt",
+							"value": "2022-02-05T04:20:00.945Z"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Activities",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{access_token}}"
+					}
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "",
+						"type": "text",
+						"value": "",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "{{host}}/app/rest/submission/{{submission_id}}/activities",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"app",
+						"rest",
+						"submission",
+						"{{submission_id}}",
+						"activities"
+					],
+					"query": [
+						{
+							"key": "startAt",
+							"value": "2020-02-05T04:20:00.945Z",
+							"disabled": true
+						},
+						{
+							"key": "endAt",
+							"value": "2022-02-05T04:20:00.945Z",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Fetch WorkFlows",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{access_token}}"
+					}
+				},
+				"method": "GET",
+				"header": [],
+				"url": "{{host}}/app/rest/workflows"
+			},
+			"response": []
+		},
+		{
+			"name": "Get Users",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{access_token}}"
+					}
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Origin",
+						"value": "http://localhost:3000",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"url": "{{host}}/app/rest/users"
+			},
+			"response": []
+		},
+		{
+			"name": "Get Site config Copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{access_token}}"
+					}
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "",
+						"value": "",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{host}}/app/rest/institution"
+			},
+			"response": []
+		},
+		{
+			"name": "Get Notifications count",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{access_token}}"
+					}
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/app/rest/notifications/count?startAt=2020-02-05T04:20:00.945Z&endAt=2022-02-05T04:20:00.945Z",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"app",
+						"rest",
+						"notifications",
+						"count"
+					],
+					"query": [
+						{
+							"key": "startAt",
+							"value": "2020-02-05T04:20:00.945Z"
+						},
+						{
+							"key": "endAt",
+							"value": "2022-02-05T04:20:00.945Z"
+						}
+					]
+				},
+				"description": "Notifications count for logged in user between date range"
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}

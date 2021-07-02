@@ -1,0 +1,66 @@
+type: object
+properties:
+  id:
+    type: string
+    format: uuid
+  borrower:
+    type: object
+    $ref: '#/definitions/IdNameDto'
+  types:
+    type: array
+    items:
+      type: string
+  purposes:
+    type: array
+    items:
+      type: string
+  due:
+    type: string
+  note:
+    type: string
+  status:
+    type: string
+  workflow:
+    type: object
+    properties:
+      steps:
+        type: array
+        description: step names
+        items:
+          type: string
+      current:
+        type: integer
+        description: index of the current step
+        format: int32
+      transitions:
+        type: array
+        description: only the user-initiated transitions for the current step
+        items:
+          type: object
+          properties:
+            to:
+              type: integer
+              format: int32
+            label:
+              type: string
+              description: the text to display in the button
+  sections:
+    type: array
+    items:
+      $ref: ./models/response/section.yml
+  tasks:
+    type: array
+    items:
+      $ref: ./models/response/task.yml
+  team:
+    type: array
+    items:
+      $ref: ./models/response/user-list.yml
+  creator:
+    $ref: '#/definitions/IdNameDto'
+  isFlagged:
+    type: boolean
+    description: flagged for logged in user
+  displayRef:
+    type: string
+title: GetSubmission

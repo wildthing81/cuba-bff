@@ -1,0 +1,46 @@
+type: object
+required:
+  - assignee
+properties:
+  id:
+    type: string
+    format: uuid
+  assignee:
+    type: object
+    $ref: '#/definitions/IdNameDto'
+  borrower:
+    type: object
+    $ref: '#/definitions/IdNameDto'
+  category:
+    type: string
+    description: decision or work
+  createdAt:
+    type: string
+    description: zulu time format
+  creator:
+    type: object
+    $ref: '#/definitions/IdNameDto'
+  description:
+    type: string
+  due:
+    type: string
+  isFlagged:
+    type: boolean
+    description: means flagged for logged in user
+  isViewed:
+    type: boolean
+    description: means viewed by the logged in user
+  note:
+    type: string
+  status:
+    type: string
+    description: depends on category and type
+  submissionId:
+    type: string
+  type:
+    type: string
+    description: one of ['formal' or 'informal'] if category is decision, else 'work'
+  updatedAt:
+    type: string
+    description: zulu time format
+title: GetTask

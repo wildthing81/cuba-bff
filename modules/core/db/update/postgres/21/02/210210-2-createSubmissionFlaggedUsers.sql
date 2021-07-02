@@ -1,0 +1,2 @@
+alter table SUBMISSION_FLAGGED_USERS add constraint FK_SUBFLAUSE_ON_SUBMISSION foreign key (submission_id) references submission(ID);
+alter table SUBMISSION_FLAGGED_USERS add constraint FK_SUBFLAUSE_ON_USER foreign key (user_id) references SEC_USER(ID);

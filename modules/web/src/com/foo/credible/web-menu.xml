@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+  ~ The code is copyright ©2021
+  -->
+
+<menu-config xmlns="http://schemas.haulmont.com/cuba/menu.xsd">
+    <menu id="application-credible" insertBefore="administration" caption="mainMsg://menu_config.application-credible">
+    </menu>
+</menu-config>

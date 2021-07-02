@@ -1,0 +1,16 @@
+[
+  {
+    "text": "Anna Analyst created a submission for BHP Group and added you to the team",
+    "payload": [
+      {
+        "key": "submissionId",
+        "value": "e048cd13-ae14-3cda-6b51-93e10b9c0fd7"
+      }
+    ],
+    "isRead": false,
+    "isHidden": false,
+    "id": "d3d86170-7268-7ae8-c1e3-ad731cc3ccd2",
+    "createdAt": "2021-05-12T04:56:01.849Z",
+    "to": "dd7ea451-b72e-6143-c14f-e4970bb156eb"
+  }
+]

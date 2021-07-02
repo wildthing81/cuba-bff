@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+  ~ The code is copyright ©2021
+  -->
+
+<views xmlns="http://schemas.haulmont.com/cuba/view.xsd">
+    <view class="com.anzi.credible.entity.Institution"
+          name="institution-view" extends="_local" systemProperties="false"/>
+    <view class="com.anzi.credible.entity.Institution"
+          name="borrower-list"
+          extends="_local" systemProperties="false">
+        <property name="borrowers" view="_local">
+            <property name="submissions" view="_local"/>
+        </property>
+    </view>
+    <view class="com.anzi.credible.entity.Borrower"
+          name="borrower-fetch"
+          extends="_local" systemProperties="false">
+        <property name="watchers" view="_local"/>
+        <property name="institution" view="_local"/>
+        <property name="team" view="_local"/>
+    </view>
+    <!-- Create/Fetch  views -->
+    <view class="com.anzi.credible.entity.Submission"
+          name="submission-borrower"
+          extends="_local" systemProperties="true">
+        <property name="borrower" view="_local"/>
+    </view>
+    <view class="com.anzi.credible.entity.Submission"
+          name="submission-list"
+          extends="_local" systemProperties="true">
+        <property name="borrower" view="_local"/>
+        <property name="tasks" view="_local"/>
+        <property name="submissionPurpose" view="_local"/>
+        <property name="flaggedUsers" view="_local"/>
+        <property name="viewedUsers" view="_local"/>
+        <property name="workflow" view="workflow-fetch" />
+    </view>
+    <view class="com.anzi.credible.entity.Submission"
+          name="submission-fetch"
+          extends="_local" systemProperties="true">
+        <property name="borrower" view="_local"/>
+        <property name="submissionPurpose" view="_local"/>
+        <property name="sections" view="section-fetch"/>
+        <property name="tasks" view="task-fetch"/>
+        <property name="team" view="_local"/>
+        <property name="workflow" view="workflow-fetch"/>
+        <property name="flaggedUsers" view="_local"/>
+        <property name="viewedUsers" view="_local"/>
+    </view>
+    <view class="com.anzi.credible.entity.Submission"
+          name="submission-workflow"
+          extends="_local" systemProperties="true">
+        <property name="borrower" view="_local"/>
+        <property name="workflow" view="workflow-fetch"/>
+        <property name="sections" view="section-fetch"/>
+        <property name="tasks" view="task-fetch"/>
+    </view>
+    <view class="com.anzi.credible.entity.SubmissionSection"
+          name="section-fetch"
+          extends="_local" systemProperties="true"/>
+    <view class="com.anzi.credible.entity.Task"
+          name="task-fetch"
+          extends="_local" systemProperties="true">
+        <property name="submission" view="submission-borrower"/>
+        <property name="assignee" view="_local"/>
+        <property name="flaggedUsers" view="_local"/>
+        <property name="viewedUsers" view="_local"/>
+    </view>
+    <view class="com.anzi.credible.entity.AppUser"
+          name="appUser-fetch"
+          extends="_local" systemProperties="true">
+        <property name="userRoles" view="_local"/>
+        <property name="institution" view="_local"/>
+    </view>
+    <view class="com.anzi.credible.entity.Workflow"
+          name="workflow-fetch"
+          extends="_local" systemProperties="true">
+        <property name="steps" view="step-fetch"/>
+    </view>
+    <view class="com.anzi.credible.entity.WorkflowStep"
+          name="step-fetch"
+          extends="_local" systemProperties="true">
+        <property name="transitions" view="_local"/>
+    </view>
+    <!-- Update Views-->
+    <view class="com.anzi.credible.entity.Task"
+          name="task-update"
+          extends="_local">
+        <property name="submission" view="_local">
+            <property name = "tasks" view="task-fetch"/>
+        </property>
+        <property name="taskUpdates" view="_local"/>
+        <property name="flaggedUsers" view="_local"/>
+    </view>
+    <view class="com.anzi.credible.entity.TaskUpdate"
+          name="taskUpdate-fetch"
+          extends="_local" systemProperties="true">
+            <property name="task" view="_local">
+            <property name="submission" view="_local"/>
+        </property>
+    </view>
+
+    <view class="com.anzi.credible.entity.Activity"
+          name="activity-fetch"
+          extends="_local" systemProperties="true">
+    </view>
+
+    <view class="com.anzi.credible.entity.Comment"
+          name="comment-fetch"
+          extends="_local" systemProperties="true">
+    </view>
+
+    <view class="com.anzi.credible.entity.Submission"
+          name="comment-list"
+          extends="_local" systemProperties="false">
+        <property name="comments" view="comment-fetch"/>
+    </view>
+
+    <view class="com.anzi.credible.entity.Notification"
+          name="notification-fetch"
+          extends="_local" systemProperties="true">
+    </view>
+
+    <view class="com.anzi.credible.entity.Notification"
+          name="notification-subscriber-fetch"
+          extends="_local" systemProperties="true">
+        <property name="subscribers" view="_local">
+            <property name="user" view="_local"/>
+        </property>
+    </view>
+</views>

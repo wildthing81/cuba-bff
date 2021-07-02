@@ -1,0 +1,29 @@
+type: object
+properties:
+  id:
+    type: string
+    format: uuid
+  name:
+    type: string
+  steps:
+    type: array
+    items:
+      $ref: ./models/workflowstep.yml
+  initialStatus:
+    type: string
+  submissionTypes:
+    type: array
+    items:
+      type: string
+  author:
+    $ref: '#/definitions/IdNameDto'
+  createdAt:
+    type: string
+    description: zulu time format
+  updatedAt:
+    type: string
+    description: zulu time format
+  version:
+    type: integer
+    format: int32
+title: GetWorkflow

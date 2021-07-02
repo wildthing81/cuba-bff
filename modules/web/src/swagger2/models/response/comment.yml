@@ -1,0 +1,8 @@
+# Response object on creating comment
+type: object
+properties:
+  id:
+    type: string
+    format: uuid
+    description: comment id
+title: GetComment

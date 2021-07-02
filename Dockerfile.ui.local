@@ -1,0 +1,34 @@
+# Multi-stage docker file that
+# first builds the war file using Gradle, and then
+# deploys the built file to tomcat
+
+FROM gradle:latest AS builder
+LABEL maintainer="ramaswamy.ramanathan@anz.com"
+
+WORKDIR /home/credible-be
+COPY *.gradle gradle.* gradlew ./
+COPY gradle ./gradle
+ENV GRADLE_OPTS  "-Xmx512m"
+RUN ./gradlew --version
+
+# Copy everything as we won't be keeping it anyway
+COPY . .
+RUN ./gradlew buildWar --configure-on-demand
+
+# Now deploy the built war to Tomcat as a separate stage
+FROM tomcat:8-jre8
+ARG env=local
+LABEL maintainer="ramaswamy.ramanathan@anz.com"
+EXPOSE 8080
+
+ENV TOMCAT_HOME "/usr/local/tomcat"
+ENV APP_HOME "${TOMCAT_HOME}/app_home"
+ENV CATALINA_OPTS="-Dapp.home=${APP_HOME}"
+
+COPY --from=0 /home/credible-be/build/distributions/war ${TOMCAT_HOME}/webapps
+
+COPY config/${env}/app-core.properties ${APP_HOME}/app-core/local.app.properties
+COPY config/${env}/app-web.properties ${APP_HOME}/app/local.app.properties
+
+# start
+CMD ["catalina.sh", "run"]

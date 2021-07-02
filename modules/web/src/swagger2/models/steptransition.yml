@@ -1,0 +1,19 @@
+type: object
+properties:
+  to:
+    type: integer
+    format: int32
+    description: Step number to transition to
+  label:
+    type: string
+    description: label of the transition button
+  trigger:
+    type: string
+    description: indicating type of transition (user-initiated, rework)
+  submissionStatus:
+    type: string
+    description: Status to change the submission to when performing this transition
+  borrowerRefresh:
+    type: boolean
+    description: toggle to refresh borrower profile when performing this transition
+title: StepTransition

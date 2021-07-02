@@ -1,0 +1,51 @@
+version: '2'
+
+services:
+  postgres:
+    image: postgres:11.7
+    container_name: credible_db
+    environment:
+      - POSTGRES_DB=credibledb
+      - POSTGRES_USER=credible
+      - POSTGRES_PASSWORD=credible
+    ports:
+      - "5432:5432"
+    volumes:
+      - ~/credible_data:/var/lib/postgresql/data
+#  axonserver:
+#    image: axoniq/axonserver
+#    hostname: axonserver
+#    container_name: credible_eventstore
+#    volumes:
+#      - axonserver-data:/data
+#      - axonserver-events:/eventdata
+#      - axonserver-config:/config:ro
+#    ports:
+#      - '8024:8024'
+#      - '8124:8124'
+#      - '8224:8224'
+  backend:
+    depends_on:
+      - postgres
+      #- axonserver
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        env: local
+    container_name: credible_be
+    #network_mode: "host"
+    environment:
+      JAVA_OPTS: -agentlib:jdwp=transport=dt_socket,server=y,address=8000,suspend=n
+    ports:
+      - 8080:8080
+      - 8000:8000
+    volumes:
+      - ~/credible_home:/usr/local/tomcat/app-home
+
+volumes:
+  credible_data:
+  axonserver-data:
+  axonserver-events:
+  axonserver-config:
+

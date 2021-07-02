@@ -1,0 +1,11 @@
+{
+  "login": "anna",
+  "password": "anna123",
+  "firstName": "Anna",
+  "middleName": "",
+  "lastName": "Analyst",
+  "email": "anna@example.tes",
+  "position": "ra",
+  "profileImage": "https://randomuser.me/api/portraits/women/71.jpg",
+  "cadLevel": 1500
+}

@@ -1,0 +1,15 @@
+type: object
+properties:
+  id:
+    type: string
+    format: uuid
+  name:
+    type: string
+  position:
+    type: string
+    description: The user's job
+  cadLevel:
+    type: integer
+    description: the maximum amount this person can approve
+    format: int32
+title: UserList

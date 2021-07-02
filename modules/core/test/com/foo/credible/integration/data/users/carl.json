@@ -1,0 +1,11 @@
+{
+  "login": "carl",
+  "password": "carl123",
+  "firstName": "Carl",
+  "middleName": "",
+  "lastName": "Credit",
+  "email": "carl@example.tes",
+  "position": "co",
+  "profileImage": "https://randomuser.me/api/portraits/men/71.jpg",
+  "cadLevel": 2500
+}

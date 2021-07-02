@@ -1,0 +1,23 @@
+type: object
+properties:
+  comments:
+    type: array
+    items:
+      type: string
+  content:
+    type: string
+    description: rich text
+  createdAt:
+    type: string
+    description: zulu time date string
+  exceptions:
+    originalRef: JsonNode
+    $ref: '#/definitions/JsonNode'
+  slug:
+    type: string
+  updatedAt:
+    type: string
+    description: zulu time date string
+  updatedBy:
+    type: object
+title: Section

@@ -1,0 +1,9 @@
+type: object
+properties:
+  action:
+    type: string
+    description: action text. i.e. 1 task pending, 2 tasks pending
+  status:
+    type: string
+    description: status value. i.e. Pending, Overdue
+title: actions

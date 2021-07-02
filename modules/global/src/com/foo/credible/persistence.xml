@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+  ~ The code is copyright ©2021
+  -->
+
+<persistence xmlns="http://java.sun.com/xml/ns/persistence" version="2.0">
+    <persistence-unit name="credible" transaction-type="RESOURCE_LOCAL">
+        <!-- Named Queries -->
+<!--        <mapping-file>queries.xml</mapping-file>-->
+        <!-- Converters -->
+        <class>com.anzi.credible.converters.JsonBConverter</class>
+        <class>com.anzi.credible.converters.StringToJsonBConverter</class>
+        <class>com.anzi.credible.converters.StringToListConverter</class>
+        <!-- Entities/Model -->
+        <class>com.anzi.credible.entity.Submission</class>
+        <class>com.anzi.credible.entity.SubmissionType</class>
+        <class>com.anzi.credible.entity.Borrower</class>
+        <class>com.anzi.credible.entity.SubmissionSection</class>
+        <class>com.anzi.credible.entity.Comment</class>
+        <class>com.anzi.credible.entity.SectionType</class>
+        <class>com.anzi.credible.entity.SubmissionPurpose</class>
+        <class>com.anzi.credible.entity.Institution</class>
+        <class>com.anzi.credible.entity.TaskUpdate</class>
+        <class>com.anzi.credible.entity.Task</class>
+        <class>com.anzi.credible.entity.AppUser</class>
+        <class>com.anzi.credible.entity.Workflow</class>
+        <class>com.anzi.credible.entity.WorkflowStep</class>
+        <class>com.anzi.credible.entity.StepTransition</class>
+        <class>com.anzi.credible.entity.Activity</class>
+        <class>com.anzi.credible.entity.Notification</class>
+        <class>com.anzi.credible.entity.Subscriber</class>
+    </persistence-unit>
+</persistence>
+

@@ -1,0 +1,34 @@
+type: object
+properties:
+  id:
+    type: string
+    format: uuid
+  login:
+    type: string
+  name:
+    type: string
+  firstName:
+    type: string
+  middleName:
+    type: string
+  lastName:
+    type: string
+  position:
+    type: string
+  email:
+    type: string
+  profileImage:
+    type: string
+  roles:
+    type: array
+    items:
+      type: string
+  scope:
+    type: string
+  cadLevel:
+    type: integer
+    format: int32
+  preferences:
+    originalRef: JsonNode
+    $ref: '#/definitions/JsonNode'
+title: GetUser

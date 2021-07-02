@@ -1,0 +1,15 @@
+type: object
+properties:
+  name:
+    type: string
+  steps:
+    type: array
+    items:
+      $ref: ./models/workflowstep.yml
+  initialStatus:
+    type: string
+  submissionTypes:
+    type: array
+    items:
+      type: string
+title: PostWorkflow
